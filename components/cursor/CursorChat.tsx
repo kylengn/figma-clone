@@ -30,35 +30,6 @@ const CursorChat = ({
     }
   }
 
-  useEffect(() => {
-    const onKeyUp = (event: KeyboardEvent) => {
-      if (event.key === '/') {
-        setCursorState({
-          mode: CursorMode.Chat,
-          previousMessage: null,
-          message: ''
-        })
-      } else if (event.key === 'Escape') {
-        updateMyPresence({ message: '' })
-        setCursorState({ mode: CursorMode.Hidden })
-      }
-    }
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === '/') {
-        event.preventDefault()
-      }
-    }
-
-    window.addEventListener('keyup', onKeyUp)
-    window.addEventListener('keydown', onKeyDown)
-
-    return () => {
-      window.removeEventListener('keyup', onKeyUp)
-      window.removeEventListener('keydown', onKeyDown)
-    }
-  }, [setCursorState, updateMyPresence])
-
   return (
     <div
       className='absolute top-0 left-0'
@@ -69,7 +40,10 @@ const CursorChat = ({
       {cursorState.mode === CursorMode.Chat && (
         <>
           <CursorSVG color='#000' />
-          <div className='absolute left-2 top-5 bg-blue-500 px-4 py-2 text-sm leading-relaxed text-white rounded-3xl'>
+          <div
+            className='absolute left-2 top-5 bg-blue-500 px-4 py-2 text-sm leading-relaxed text-white rounded-3xl'
+            onKeyUp={e => e.stopPropagation()}
+          >
             {cursorState.previousMessage && (
               <div>{cursorState.previousMessage}</div>
             )}
